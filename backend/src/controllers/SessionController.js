@@ -7,7 +7,13 @@ module.exports = {
         //usando desconstrução, busca de dentro de body o atributo e-mail
         const { email } = req.body;
 
-        const user = await User.create({ email });
+        //quando a variável possui o mesmo nome da chave não é necessário adicionar o nome da mesma por exemplo { email: email }
+        let user = await User.findOne({email});
+        if (!user) {
+            user = await User.create({email})
+        }
+
+        // const user = await User.create({ email });
 
         return res.json(user);
     }

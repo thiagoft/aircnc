@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const routes = require('./routes');
 
@@ -16,6 +17,7 @@ mongoose.connect('mongodb+srv://aircnc:aircnc@0926@cluster0-1gtkd.mongodb.net/ai
 // req.params = Acessar route params (para edição, delete)
 // req.body = Acessar corpo da requisição (para criação, edição)
 
+app.use(cors());
 // permite o uso de json vindo das requests
 app.use(express.json());
 app.use(routes);

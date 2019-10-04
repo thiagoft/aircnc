@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 
 const routes = require('./routes');
 
@@ -20,6 +21,7 @@ mongoose.connect('mongodb+srv://aircnc:aircnc@0926@cluster0-1gtkd.mongodb.net/ai
 app.use(cors());
 // permite o uso de json vindo das requests
 app.use(express.json());
+app.use('/files', express.static(path.resolve(__dirname,'..','uploads')))
 app.use(routes);
 
 app.listen(3333);

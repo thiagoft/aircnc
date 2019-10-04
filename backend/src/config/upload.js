@@ -1,6 +1,8 @@
 const multer = require('multer');
 const path = require('path');
 
+//"path" concatena os parametros via varargs com o separador de niveis default do sistema o qual estiver rodando
+//"__dirname" retorna o diretorio atual do arquivo o qual path foi chamado
 module.exports = {
     storage: multer.diskStorage({
         destination: path.resolve(__dirname,'..','..','uploads'),

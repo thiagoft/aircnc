@@ -1,41 +1,68 @@
-import React, { useState, useEffect } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Image,  AsyncStorage } from 'react-native';
+import React, { useState, useEffect } from "react";
+import socketio from "socket.io-client";
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Image,
+  AsyncStorage,
+  Alert
+} from "react-native";
 
-import SpotList from '../components/SpotList';
+import SpotList from "../components/SpotList";
 
-import logo from '../assets/logo.png';
+import logo from "../assets/logo.png";
 
 export default function List() {
-    const [techs, setTechs] = useState([]);
+  const [techs, setTechs] = useState([]);
 
-    useEffect(() => {
-        AsyncStorage.getItem('techs').then(storagedTechs => {
-            const techsArray = storagedTechs.split(',').map(tech => tech.trim());
+  useEffect(() => {
+    AsyncStorage.getItem("user").then(user_id => {
+      const socket = socketio("http://192.168.15.16:3333", {
+        query: { user_id }
+      });
 
-            setTechs(techsArray);
-        })
-    }, []);
+      socket.on("booking_response", booking => {
+        Alert.alert(
+          `Sua reserva em ${boooking.spot.company} em ${booking.date} foi ${
+            booking.approved ? "APROVADA" : "REJEITADA"
+          }`
+        );
+      });
+    });
+  }, []);
 
-    return (
-        <SafeAreaView style={StyleSheet.container}>
-            <Image style={styles.logo} source={logo} />
+  useEffect(() => {
+    AsyncStorage.getItem("techs").then(storagedTechs => {
+      console.log(storagedTechs);
+      const techsArray = storagedTechs.split(",").map(tech => tech.trim());
 
-            <ScrollView>
-                {techs.map(tech => <SpotList key={tech} tech={tech} />)}
-            </ScrollView>
-        </SafeAreaView>
-    );
+      setTechs(techsArray);
+    });
+  }, []);
+
+  return (
+    <SafeAreaView style={StyleSheet.container}>
+      <Image style={styles.logo} source={logo} />
+
+      <ScrollView>
+        {techs.map(tech => (
+          <SpotList key={tech} tech={tech} />
+        ))}
+      </ScrollView>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
+  container: {
+    flex: 1
+  },
 
-    logo: {
-        height: 32,
-        resizeMode: 'contain',
-        alignSelf: 'center',
-        marginTop: 10
-    },
+  logo: {
+    height: 32,
+    resizeMode: "contain",
+    alignSelf: "center",
+    marginTop: 10
+  }
 });
